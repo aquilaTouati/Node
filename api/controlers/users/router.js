@@ -1,11 +1,13 @@
-const validator2 = require("../../../validators/usersValidator");
+const validator = require("../../../validators/usersValidator");
 const middleware2 = require("../../../middlewares/eveningMiddleware");
+const auth = require("../../../middlewares/auth");
+const controller = require("./controller");
 
 router
-  .get("/", middleware.verifyEvening, controler.getUser)
-  .get("/:id", controler.getUserById)
-  .post("/", validator.validateUser, controler.createUser)
-  .put("/:id", validator.validateUser, controler.updateUser)
-  .delete("/:id", controler.deleteUser);
+  .get("/", middleware.verifyEvening, auth.verifyToken, controller.getUser)
+  .get("/:id", controller.getUserById)
+  .post("/", validator.validateUser, controller.createUser)
+  .put("/:id", validator.validateUser, controller.updateUser)
+  .delete("/:id", controller.deleteUser);
 
 module.exports = router;

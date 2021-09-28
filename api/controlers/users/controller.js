@@ -1,4 +1,5 @@
 const token = require("jsonwebtoken");
+const User = require("../../../models/user");
 
 const users = [
   {
@@ -44,11 +45,17 @@ const login = (req, res) => {
   }
 };
 
-const createUser = (req, res) => {
+const createUser = async (req, res) => {
   const user = req.body;
   console.log("data =", user);
   user.id = users.length + 1;
+  user.password = await bycrypt.hash(user.password, 10);
   users.push(user);
+  const user = new User({
+    ...req.body,
+  });
+  await user.save;
+
   res.status(200).send({
     message: "User created successfully",
     data: user,
@@ -112,4 +119,12 @@ const updateUser = (req, res) => {
     message: "User updated successfully",
     data: users[index],
   });
+};
+
+module.exports = {
+  getUser,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
 };

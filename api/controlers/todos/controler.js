@@ -1,3 +1,5 @@
+const Todo = require("../../../models/todos");
+
 const todos = [
   {
     id: 1,
@@ -16,28 +18,32 @@ const todos = [
   },
 ];
 
-const createTodo = (req, res) => {
-  const todo = req.body;
-  todo.id = todos.length + 1;
-  todos.push(todo);
+const createTodo = async (req, res) => {
+  // const todo = req.body;
+  // todo.id = todos.length + 1;
+  // todos.push(todo);
+  const todo = new Todo({
+    ...req.body,
+  });
+  await todo.save();
   res.status(200).send({
     message: "To dos created successfully",
     data: todo,
   });
 };
 
-const getTodo = (req, res) => {
-  
-
+const getTodo = async (req, res) => {
+  const todos = await Todo.find({});
   res.status(200).send({
     message: "Fetched successfully",
     data: todos,
   });
 };
 
-const getTodoById = (req, res) => {
+const getTodoById = async (req, res) => {
   const id = req.params.id;
-  const todo = todos.find((todo) => todo.id == id);
+  //const todo = todos.find((todo) => todo.id == id);
+  const todo = await Todo.findOne({ _id: id });
   if (!todo) {
     return res.status(404).send({
       message: "to do not found",

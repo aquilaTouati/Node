@@ -2,10 +2,24 @@ const express = require("express");
 
 const app = express();
 const userRouter = require("./api/controlers/todos/router");
+require("dotenv").config();
+const mongoose = require("mongoose");
 
 app.use(express.json());
 
 app.use("/todos", userRouter);
+
+mongoose.connect(
+  "mongodb://akilaT:strodix1997@cluster0-shard-00-00.rj5tw.mongodb.net:27017,cluster0-shard-00-01.rj5tw.mongodb.net:27017,cluster0-shard-00-02.rj5tw.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-3qusrp-shard-0&authSource=admin&retryWrites=true&w=majority",
+  {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+  }
+);
+const db = mongoose.connection;
+db.once("open", () => {
+  console.log("Databse connected !!");
+});
 
 // GET https://jsonplaceholder.typicode.com/users endpoint
 
